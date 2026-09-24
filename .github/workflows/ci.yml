@@ -1,0 +1,15 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with: { components: rustfmt, clippy }
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets -- -D warnings
+      # Q40: .feature — документация, не исполняемая спецификация.
+      # cargo test включает features_inventory (сверка фич с README).
+      # cucumber-rs — план v0.2.
+      - run: cargo test --all
